@@ -122,7 +122,7 @@
 
         <TextView
             android:id="@+id/textView48"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_18sdp"
             android:layout_marginTop="@dimen/_17sdp"
@@ -130,7 +130,7 @@
             android:layout_marginBottom="@dimen/_7sdp"
             android:fontFamily="@font/poppins_medium"
 
-            android:text="Avil Services"
+            android:text="Available Services"
             android:textColor="#000000"
             android:textSize="@dimen/_10ssp"
             android:textStyle="bold"

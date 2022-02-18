@@ -40,21 +40,22 @@ android:background="#ffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
+
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="@dimen/_17sdp"
         android:layout_height="@dimen/_17sdp"
         android:layout_marginStart="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_26sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_40sdp"
         android:layout_marginBottom="@dimen/_20sdp"
         android:background="#002E56"
         app:layout_constraintBottom_toTopOf="@+id/recycler"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.058"
         app:layout_constraintStart_toEndOf="@+id/credential_title"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_bias="0.17"
         app:srcCompat="@drawable/ic_baseline_info_white" />
 
     <!--

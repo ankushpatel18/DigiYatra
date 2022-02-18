@@ -5,36 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".fragments.AlmostDoneActivity">
+    tools:context=".fragments.Alomst_done">
 
     <ImageButton
         android:id="@+id/backBtn1"
-        android:layout_width="@dimen/_19sdp"
-        android:layout_height="@dimen/_25sdp"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
         android:layout_marginStart="@dimen/_12sdp"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_19sdp"
+        android:layout_marginEnd="@dimen/_189sdp"
+        android:layout_marginBottom="@dimen/_425sdp"
         android:background="#ffffff"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.003"
+        app:layout_constraintHorizontal_bias="0.006"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_arrow_back"
-        app:tint="#002E56" />
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/ic_arrow_back" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_31sdp"
+        android:layout_marginTop="@dimen/_18sdp"
+        android:layout_marginEnd="@dimen/_76sdp"
 
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_bold"
         android:text="Add your credential"
         android:textColor="#002E56"
         android:textSize="@dimen/_18ssp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/backBtn1"
-        app:layout_constraintTop_toTopOf="@id/backBtn1"
-         />
+        app:layout_constraintBottom_toBottomOf="@+id/backBtn1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+
 
     <ImageView
         android:id="@+id/imageDot2"
@@ -91,24 +100,30 @@
         app:layout_constraintHorizontal_bias="0.367"
         app:layout_constraintStart_toStartOf="@+id/imageDot2"
         app:layout_constraintTop_toBottomOf="@+id/imageDot2" />
+
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#dddddd"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="@id/imageView16"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="#dddddd"
         app:layout_constraintBottom_toBottomOf="@id/imageView16"
+        app:layout_constraintEnd_toStartOf="@id/imageDot3"
         app:layout_constraintStart_toEndOf="@id/imageDot2"
-        app:layout_constraintEnd_toStartOf="@id/imageDot3"/>
+        app:layout_constraintTop_toTopOf="@id/imageView16" />
+
     <View
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#dddddd"
         android:layout_marginHorizontal="@dimen/_10sdp"
-        app:layout_constraintTop_toTopOf="@id/imageView16"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="#dddddd"
         app:layout_constraintBottom_toBottomOf="@id/imageView16"
+        app:layout_constraintEnd_toStartOf="@id/imageDot2"
         app:layout_constraintStart_toEndOf="@id/imageView16"
-        app:layout_constraintEnd_toStartOf="@id/imageDot2"/>
+        app:layout_constraintTop_toTopOf="@id/imageView16" />
 
     <ImageView
         android:id="@+id/imageDot3"
@@ -226,7 +241,7 @@
         <Button
             android:id="@+id/cameraBtn"
             android:layout_width="@dimen/_183sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_height="@dimen/_35sdp"
             android:layout_centerInParent="true"
             android:layout_marginEnd="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_30sdp"
@@ -342,7 +357,7 @@
             android:text="@string/validating_selfie"
             android:textAlignment="center"
             android:textColor="#333333"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/first_check"
             app:layout_constraintStart_toStartOf="@id/first_check"
@@ -370,7 +385,7 @@
             android:text="@string/checking_liveness"
             android:textAlignment="center"
             android:textColor="#333333"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/second_check"
             app:layout_constraintStart_toStartOf="@id/second_check"
@@ -399,7 +414,7 @@
             android:text="@string/verification_successful"
             android:textAlignment="center"
             android:textColor="#333333"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@id/third_check"
             app:layout_constraintStart_toStartOf="@id/third_check"
