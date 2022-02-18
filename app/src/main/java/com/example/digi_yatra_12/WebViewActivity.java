@@ -17,11 +17,13 @@ import com.example.digi_yatra_12.fragments.RetrivedAadharDataActivity;
 public class WebViewActivity extends AppCompatActivity {
 
     private WebView webView;
+    private String connectionID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+        connectionID = getIntent().getStringExtra("connectionId");
         webView = findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setWebViewClient(mWebViewClient);
@@ -55,6 +57,7 @@ public class WebViewActivity extends AppCompatActivity {
             String code = url.getQueryParameter("code");
             Log.d("check url", code);
             Intent intent = new Intent(this, RetrivedAadharDataActivity.class);
+            intent.putExtra("connectionId", connectionID);
             intent.putExtra("code",code);
             startActivity(intent);
             finish();

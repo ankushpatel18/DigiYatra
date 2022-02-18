@@ -12,7 +12,7 @@ public class ConnectionDetails {
     private String message;
     @SerializedName("conn_record")
     @Expose
-    private List<ConnRecord> connRecord = null;
+    private ConnRecord connRecord = null;
 
     public int getStatus() {
         return status;
@@ -30,11 +30,11 @@ public class ConnectionDetails {
         this.message = message;
     }
 
-    public List<ConnRecord> getConnRecord() {
+    public ConnRecord getConnRecord() {
         return connRecord;
     }
 
-    public void setConnRecord(List<ConnRecord> connRecord) {
+    public void setConnRecord(ConnRecord connRecord) {
         this.connRecord = connRecord;
     }
 

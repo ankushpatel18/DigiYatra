@@ -45,11 +45,13 @@ public class RetrivedAadharDataActivity extends AppCompatActivity {
     private Button popup;
     private CustomProgressDialog customProgressDialog;
     private String aadharData;
+    private String connectionID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_retrieved_addheerdata);
+        connectionID = getIntent().getStringExtra("connectionId");
         initViews();
         if (getIntent().hasExtra("code")) {
             code = getIntent().getStringExtra("code");
@@ -83,6 +85,7 @@ public class RetrivedAadharDataActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i = new Intent(RetrivedAadharDataActivity.this, AlmostDoneActivity.class);
                 i.putExtra("aadharData", aadharData);
+                i.putExtra("connectionId", connectionID);
                 startActivity(i);
             }
         });

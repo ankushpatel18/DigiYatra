@@ -258,6 +258,13 @@ public class IssuersVerifier {
         @SerializedName("doB")
         @Expose
         private String doB;
+        @SerializedName("vaccinationStatus")
+        @Expose
+        private String vaccinationStatus;
+
+        public String getVaccinationStatus() {
+            return vaccinationStatus;
+        }
 
         public String getFullName() {
             return fullName;

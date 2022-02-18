@@ -69,12 +69,14 @@ public class AlmostDoneActivity extends AppCompatActivity {
     private ImageView imgPhoto;
     private ImageView imgDot2, imgDot3;
     private Bitmap photoBitmap;
+    private String connectionId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alomst_done);
+        connectionId = getIntent().getStringExtra("connectionId");
         customProgressDialog = new CustomProgressDialog(this);
         initViews();
         showInstruction();
@@ -290,17 +292,17 @@ public class AlmostDoneActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        SharedPreferences sharedPreferences = getSharedPreferences("digiyatra", Context.MODE_PRIVATE);
-        String connectionId = sharedPreferences.getString("connection_id","");
+        /*SharedPreferences sharedPreferences = getSharedPreferences("digiyatra", Context.MODE_PRIVATE);
+        String connectionId = sharedPreferences.getString("connection_id","");*/
         JSONObject getConnectionJsonObject = BaseClass.getConnection(connectionId, GlobalApplication.agent);
         if (getConnectionJsonObject.getString("status").equals("0")) {
             Toast.makeText(AlmostDoneActivity.this,getConnectionJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
         }
         else {
             ConnectionDetails connectionDetails = new Gson().fromJson(getConnectionJsonObject.toString().trim(), ConnectionDetails.class);
-            myConnectionId = connectionDetails.getConnRecord().get(0).getConnectionID();
-            myDID = connectionDetails.getConnRecord().get(0).getMyDID();
-            theirDid = connectionDetails.getConnRecord().get(0).getTheirDID();
+            myConnectionId = connectionDetails.getConnRecord().getConnectionID();
+            myDID = connectionDetails.getConnRecord().getMyDID();
+            theirDid = connectionDetails.getConnRecord().getTheirDID();
             GetConnectionData getConnectionData = new GetConnectionData();
             getConnectionData.execute();
         }

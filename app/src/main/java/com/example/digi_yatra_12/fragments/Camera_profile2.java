@@ -32,7 +32,7 @@ public class Camera_profile2 extends AppCompatActivity {
     private TextView textAAdhar, textName, textIdType;
     private Button btnAcccept;
     private JSONObject myJson;
-    private String issuerName,issuerId, type ;
+    private String issuerName,issuerId, type, credentialType ;
     private IssuersVerifier issuersVerifier;
     private LinearLayout linearLayout;
     private Button btnCancel;
@@ -52,6 +52,7 @@ public class Camera_profile2 extends AppCompatActivity {
             issuerName = myJson.getJSONObject("issuer").getString("name");
             issuerId = myJson.getJSONObject("issuer").getString("id");
             type = myJson.getString("type");
+            credentialType = issuersVerifier.getCredentialType();
             name = myJson.getJSONObject("credentialSubject").getString("fullName");
             aadharId = myJson.getJSONObject("credentialSubject").getString("idNumber");
             idType = myJson.getJSONObject("credentialSubject").getString("idType");
@@ -117,7 +118,7 @@ public class Camera_profile2 extends AppCompatActivity {
         btnAcccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AadharDatabase.getInstance(Camera_profile2.this).Dao().saveAadharData(new AAdharData(0,myJson, issuerId,issuerName,type,issuersVerifier));
+                AadharDatabase.getInstance(Camera_profile2.this).Dao().saveAadharData(new AAdharData(0,myJson, issuerId,issuerName,type,issuersVerifier, credentialType));
                 startActivity(new Intent(Camera_profile2.this, NavbarMainActivity.class));
                 finish();
             }

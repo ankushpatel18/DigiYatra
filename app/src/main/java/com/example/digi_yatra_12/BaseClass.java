@@ -367,7 +367,8 @@ public class BaseClass {
 
         try {
             DIDExchangeController didex = agent.getDIDExchangeController();
-            res = didex.queryConnections(requestEnvelope);
+           // res = didex.queryConnectionsByID(requestEnvelope);
+            res = didex.queryConnectionByID(requestEnvelope);
 
             if (res.getError() != null && !res.getError().getMessage().isEmpty()) {
 //                        Log.d("failed to register with router: ", res.getError().getMessage());
@@ -381,7 +382,7 @@ public class BaseClass {
                 String ResponsePayload=new String(res.getPayload(), StandardCharsets.UTF_8);
                 Log.d("getConnectionResponse1", ResponsePayload);
                 JSONObject responseobject = new JSONObject(ResponsePayload);
-                res_object.put("conn_record",responseobject.get("results"));
+                res_object.put("conn_record",responseobject.get("result"));
 
             }
         } catch (Exception e) {

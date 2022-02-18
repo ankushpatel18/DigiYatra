@@ -96,6 +96,7 @@ public class Credential_Choose extends AppCompatActivity {
                     PopIssuerDialog popIssuerDialog = new PopIssuerDialog();
                     Bundle bundle = new Bundle();
                     bundle.putString("response", response.body().toString());
+                    bundle.putString("title", issuer);
                     popIssuerDialog.setArguments(bundle);
                     popIssuerDialog.show(getSupportFragmentManager(), "PopIssuerDialog");
                 }

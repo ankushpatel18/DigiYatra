@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -51,12 +53,15 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
     private String type;
     private JSONObject jsonObject1;
     private CustomProgressDialog customProgressDialog;
+    private String connectionId;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add_credentials_cowin);
+        connectionId = getIntent().getStringExtra("connectionId");
+        initOtp();
         customProgressDialog = new CustomProgressDialog(this);
         getDataFromDatabase();
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -70,16 +75,109 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
                 }
             }
         });
-        binding.otpView.setOtpCompletionListener(new OnOtpCompletionListener() {
-            @Override
-            public void onOtpCompleted(String otp) {
-                verifyOtp();
-            }
-        });
         binding.resendOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendOTP();
+            }
+        });
+    }
+
+    private void initOtp() {
+        binding.inputCode1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputCode2.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.inputCode2.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputCode3.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.inputCode3.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputCode4.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.inputCode4.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputCode5.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.inputCode5.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.inputCode6.requestFocus();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.inputCode6.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                verifyOtp();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -155,7 +253,8 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
     }
 
     private void verifyOtp() {
-        if (TextUtils.isEmpty(binding.otpView.getText())) {
+        String otpString = binding.inputCode1.getText().toString()+binding.inputCode2.getText().toString()+binding.inputCode3.getText().toString()+binding.inputCode4.getText().toString()+binding.inputCode5.getText().toString()+binding.inputCode6.getText().toString();
+        if (otpString.length() < 6) {
             Toast.makeText(getApplicationContext(), "Please enter OTP", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -164,7 +263,7 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please resend code", Toast.LENGTH_SHORT).show();
             return;
         }
-        String otp = stringTosha256(binding.otpView.getText().toString());
+        String otp = stringTosha256(otpString);
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("otp", otp);
         jsonObject.addProperty("txnId", txnId);
@@ -253,17 +352,17 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        SharedPreferences sharedPreferences = getSharedPreferences("digiyatra", Context.MODE_PRIVATE);
-        String connectionId = sharedPreferences.getString("connection_id","");
+        /*SharedPreferences sharedPreferences = getSharedPreferences("digiyatra", Context.MODE_PRIVATE);
+        String connectionId = sharedPreferences.getString("connection_id","");*/
         JSONObject getConnectionJsonObject = BaseClass.getConnection(connectionId, GlobalApplication.agent);
         if (getConnectionJsonObject.getString("status").equals("0")) {
             Toast.makeText(AddCredentialsCowinActivity.this, getConnectionJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
         }
         else {
             ConnectionDetails connectionDetails = new Gson().fromJson(getConnectionJsonObject.toString().trim(), ConnectionDetails.class);
-            myConnectionId = connectionDetails.getConnRecord().get(0).getConnectionID();
-            myDID = connectionDetails.getConnRecord().get(0).getMyDID();
-            theirDid = connectionDetails.getConnRecord().get(0).getTheirDID();
+            myConnectionId = connectionDetails.getConnRecord().getConnectionID();
+            myDID = connectionDetails.getConnRecord().getMyDID();
+            theirDid = connectionDetails.getConnRecord().getTheirDID();
             GetConnectionData getConnectionData = new GetConnectionData();
             getConnectionData.execute();
         }

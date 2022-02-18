@@ -17,14 +17,24 @@ public class AAdharData {
     private String issuerName = "";
     private String type = "";
     private IssuersVerifier issuersVerifier ;
+    private String credentialType;
 
-    public AAdharData(int id, JSONObject json, String issuerDID, String issuerName, String type, IssuersVerifier issuersVerifier) {
+    public  AAdharData(int id, JSONObject json, String issuerDID, String issuerName, String type, IssuersVerifier issuersVerifier, String credentialType) {
         this.id = id;
         this.json = json;
         this.issuerDID = issuerDID;
         this.issuerName = issuerName;
+        this.credentialType = credentialType;
         this.type = type;      //TODO credentialType":"IdentityCredential",
         this.issuersVerifier = issuersVerifier;   //TODO responseFiledsForUser from the connectionDB
+    }
+
+    public String getCredentialType() {
+        return credentialType;
+    }
+
+    public void setCredentialType(String credentialType) {
+        this.credentialType = credentialType;
     }
 
     public int getId() {

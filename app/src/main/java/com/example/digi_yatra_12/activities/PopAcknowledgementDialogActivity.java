@@ -28,12 +28,14 @@ public class PopAcknowledgementDialogActivity extends AppCompatActivity {
 
     private LinearLayout linearLayout;
     private CustomProgressDialog customProgressDialog;
+    private String connectionID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_acknowledgement);
         customProgressDialog = new CustomProgressDialog(this);
+        connectionID = getIntent().getStringExtra("connectionId");
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
@@ -68,10 +70,12 @@ public class PopAcknowledgementDialogActivity extends AppCompatActivity {
                     if (checkBox.isChecked()) {
                         if (issuersVerifier.getCredentialType().equals("IdentityCredential")) {
                             Intent i = new Intent(PopAcknowledgementDialogActivity.this, AddDataUrlActivity.class);
+                            i.putExtra("connectionId", connectionID);
                             startActivity(i);
                             finish();
                         } else if (issuersVerifier.getCredentialType().equals("HealthCredential")) {
                             Intent i = new Intent(PopAcknowledgementDialogActivity.this, AddCredentialsCowinActivity.class);
+                            i.putExtra("connectionId", connectionID);
                             startActivity(i);
                             finish();
                         }

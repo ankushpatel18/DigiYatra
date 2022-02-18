@@ -54,9 +54,12 @@ public class PopIssuerDialog extends BottomSheetDialogFragment implements Issuer
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pop_issuer, container, false);
         String jsonString = getArguments().getString("response");
+        String title = getArguments().getString("title");
         issuerAdapter = new IssuerAdapter(requireContext(), issuersVerifierList, this);
         getIssuerList(jsonString);
         //view.setBackgroundResource(R.drawable.bg_rounded_corner_top);
+        TextView textTitle = view.findViewById(R.id.credential_title);
+        textTitle.setText(title+ " "+"Issuers");
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -170,7 +173,7 @@ public class PopIssuerDialog extends BottomSheetDialogFragment implements Issuer
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            BaseClass.acceptInvitation(connectionId, "", GlobalApplication.agent);//a5c3233f-fffd-4fb5-89a6-1e8cf9f8fda2   a5c3233f-fffd-4fb5-89a6-1e8cf9f8fda2
+            BaseClass.acceptInvitation(connectionId, "", GlobalApplication.agent);
         }
     }
 }

@@ -1,31 +1,25 @@
 package com.example.digi_yatra_12.fragments;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.example.digi_yatra_12.R;
 import com.example.digi_yatra_12.adapters.CardAdapter;
 import com.example.digi_yatra_12.roomDatabase.AAdharData;
 import com.example.digi_yatra_12.roomDatabase.AadharDatabase;
-import com.example.model.IssuersVerifier;
-import com.example.util.MyUtils;
-
-import org.json.JSONException;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,30 +29,24 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
     private List<AAdharData> aAdharDataList = new ArrayList<>();
     private CardAdapter cardAdapter;
     Button add;
+    Chip identityChip, healthChip;
 
-    public WalletFragment2() { }
+    public WalletFragment2() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_wallet2, container, false);
         initViews(view);
-        getData();
-
+        getData("IdentityCredential");
 
 
         add = (Button) view.findViewById(R.id.addBtn);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Fragment secondfragment=new Home_fragment2();
-//                FragmentManager fragmentManager =getActivity().getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction =fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.activity_main_nav_host_fragment,secondfragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-                Intent intent =new Intent(getActivity(),Credential_Choose.class);
+                Intent intent = new Intent(getActivity(), Credential_Choose.class);
                 startActivity(intent);
 
 
@@ -67,14 +55,32 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
         return view;
     }
 
-    private void getData() {
-        GetAadhar getAadhar  = new GetAadhar();
+    private void getData(String credentialType) {
+        GetCredential getAadhar = new GetCredential(credentialType);
         getAadhar.execute();
     }
 
     private void initViews(View view) {
-       recyclerview = view.findViewById(R.id.recycler);
-
+        recyclerview = view.findViewById(R.id.recycler);
+        identityChip = view.findViewById(R.id.chip1);
+        healthChip = view.findViewById(R.id.chip4);
+        identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
+        identityChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData("IdentityCredential");
+                identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.select));
+                healthChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
+            }
+        });
+        healthChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData("HealthCredential");
+                identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
+                healthChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.select));
+            }
+        });
     }
 
 
@@ -83,19 +89,24 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
 
     }
 
-    private class GetAadhar extends AsyncTask<String, String, List<AAdharData>> {
-        View view;
+    private class GetCredential extends AsyncTask<String, String, List<AAdharData>> {
+        String credentialType;
+
+        GetCredential(String credentialType) {
+            this.credentialType = credentialType;
+        }
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
         }
+
         @Override
         protected List<AAdharData> doInBackground(String... strings) {
 
-            aAdharDataList = AadharDatabase.getInstance(getContext()).Dao().getAadharData();
+            aAdharDataList = AadharDatabase.getInstance(getContext()).Dao().getAadharData(credentialType);
             return aAdharDataList;
         }
+
         @Override
         protected void onPostExecute(List<AAdharData> aAdharDataList) {
             super.onPostExecute(aAdharDataList);
@@ -106,11 +117,12 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
 
                     }
                 });
-                recyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
-                recyclerview.setAdapter(cardAdapter);
-                cardAdapter.notifyDataSetChanged();
-            }
-            else {
+                if (isAdded()) {
+                    recyclerview.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    recyclerview.setAdapter(cardAdapter);
+                    cardAdapter.notifyDataSetChanged();
+                }
+            } else {
                 Fragment fragment = new WalletFragment();
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

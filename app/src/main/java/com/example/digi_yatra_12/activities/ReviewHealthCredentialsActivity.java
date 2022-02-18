@@ -28,6 +28,7 @@ public class ReviewHealthCredentialsActivity extends AppCompatActivity {
     private JSONObject myJson;
     private String issuerName, issuerId, type;
     private IssuersVerifier issuersVerifier;
+    private String credentialType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class ReviewHealthCredentialsActivity extends AppCompatActivity {
         binding.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AadharDatabase.getInstance(ReviewHealthCredentialsActivity.this).Dao().saveAadharData(new AAdharData(0, myJson, issuerId, issuerName, type, issuersVerifier));
+                AadharDatabase.getInstance(ReviewHealthCredentialsActivity.this).Dao().saveAadharData(new AAdharData(0, myJson, issuerId, issuerName, type, issuersVerifier, credentialType));
                 startActivity(new Intent(ReviewHealthCredentialsActivity.this, NavbarMainActivity.class));
                 finish();
             }
@@ -50,6 +51,7 @@ public class ReviewHealthCredentialsActivity extends AppCompatActivity {
 
         String issuerVerifierString = getIntent().getStringExtra("issuersVerifier");
         issuersVerifier = new Gson().fromJson(issuerVerifierString, IssuersVerifier.class);
+        credentialType = issuersVerifier.getCredentialType();
         String jsonString = getIntent().getStringExtra("json");
         try {
             JSONObject json = new JSONObject(jsonString);

@@ -8,11 +8,11 @@
     android:background="#002E56"
     tools:context=".fragments.PopIssuerDialog">
     <TextView
-        android:id="@+id/textView21"
+        android:id="@+id/credential_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_27sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:fontFamily="@font/roboto_bold"
@@ -52,7 +52,7 @@ android:background="#ffffff"
         app:layout_constraintBottom_toTopOf="@+id/recycler"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView21"
+        app:layout_constraintStart_toEndOf="@+id/credential_title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ic_baseline_info_white" />

@@ -14,6 +14,8 @@ public interface Dao {
     void saveAadharData(AAdharData aAdharData);
     @Query("SELECT * FROM aadhar_data")
     List<AAdharData> getAadharData();
+    @Query("SELECT * FROM aadhar_data WHERE credentialType = :credentialType")
+    List<AAdharData> getAadharData(String credentialType);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void saveConnections(ConnectionDB connectionDB);
     @Update(onConflict = OnConflictStrategy.REPLACE)

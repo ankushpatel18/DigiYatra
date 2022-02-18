@@ -29,15 +29,19 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class AddDataUrlActivity extends AppCompatActivity {
 Button urlBtn;
+    private String connectionID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_data_url);
+        connectionID = getIntent().getStringExtra("connectionId");
         urlBtn = findViewById(R.id.UrlBtn);
         urlBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent =new Intent(AddDataUrlActivity.this, WebViewActivity.class);
+                intent.putExtra("connectionId", connectionID);
                 startActivity(intent);
                 finish();
             }
@@ -48,6 +52,7 @@ Button urlBtn;
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(AddDataUrlActivity.this, RetrivedAadharDataActivity.class);
+                i.putExtra("connectionId", connectionID);
                 startActivity(i);
                 finish();
             }
