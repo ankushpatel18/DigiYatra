@@ -331,7 +331,7 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
         String json = "{\"comment\":\"string\",\"formats\":[{\"attach_id\":\"string\",\"format\":\"aries/ld-proof-vc-detail@v1.0\"}],\"requests~attach\":[{\"@id\":\"string\",\"mime-type\":\"application/json\",\"data\":{\"json\":{\"credential\":{\"@context\":[\"https://www.w3.org/2018/credentials/v1\",\"https://dyce-context.s3.us-west-2.amazonaws.com/v1.json\",\"https://w3id.org/security/bbs/v1\"],\"id\":\"https://digiyatafoundation.com/credentialid\",\"type\":[\"VerifiableCredential\"],\"issuer\":{\"id\":\"did:dataevolve:1234\",\"name\":\"DigiYataraFoundation\"}, \"issuanceDate\":\"2020-01-01T19:23:24Z\",\"expirationDate\":\"2100-01-01T19:23:24Z\",\"credentialSubject\":{\"id\":\"https://digiyatrafoundation.com/credentialsubjectid\",\"selfie\":\"Base64 selfie image\",\"idType\":\"aadhar\",\"idJson\":{}}},\"options\":{\"proofPurpose\":\"assertionMethod\",\"created\":\"2020-04-02T18:48:36Z\",\"proofType\":\"BbsBlsSignature2020\"}}}}]}";
         try {
             jsonObject = new JSONObject(json.trim());
-
+            //idType is replaced with otp , sefie with fullName, idJson with txid for health credentials
             jsonObject.getJSONArray("requests~attach").getJSONObject(0).getJSONObject("data").getJSONObject("json").getJSONObject("credential")
                     .getJSONObject("credentialSubject").remove("idJson");
             jsonObject.getJSONArray("requests~attach").getJSONObject(0).getJSONObject("data").getJSONObject("json").getJSONObject("credential")
@@ -348,7 +348,6 @@ public class AddCredentialsCowinActivity extends AppCompatActivity {
 
             jsonObject.getJSONArray("requests~attach").getJSONObject(0).getJSONObject("data").getJSONObject("json").getJSONObject("credential")
                     .getJSONObject("credentialSubject").put("otp", token);
-//TODO idType is replaced with otp , sefie with fullName, idJson with txid for health credentials
         } catch (JSONException e) {
             e.printStackTrace();
         }

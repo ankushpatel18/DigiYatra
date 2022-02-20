@@ -386,7 +386,7 @@ public class BaseClass {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();//TODO we are getting this error "org.json.JSONException: No value for results"
+            e.printStackTrace();
         }
 
         Log.d("getConnectionResponse", res_object.toString());

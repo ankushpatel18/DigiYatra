@@ -288,7 +288,7 @@ public class AlmostDoneActivity extends AppCompatActivity {
                     .getJSONObject("credentialSubject").remove("idType");
 
             jsonObject.getJSONArray("requests~attach").getJSONObject(0).getJSONObject("data").getJSONObject("json").getJSONObject("credential")
-                    .getJSONObject("credentialSubject").put("idType", "aadhaar"); ///TODO don,t know the value of idTypekey so putting the static value "aadhar
+                    .getJSONObject("credentialSubject").put("idType", "aadhaar");
         } catch (JSONException e) {
             e.printStackTrace();
         }

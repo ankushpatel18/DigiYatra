@@ -13,7 +13,7 @@ public class AAdharData {
     @PrimaryKey(autoGenerate = true)
     private int id =0;
     private JSONObject json;
-    private String issuerDID = ""; //TOdo query using issuerDiD
+    private String issuerDID = ""; // query using issuerDiD
     private String issuerName = "";
     private String type = "";
     private IssuersVerifier issuersVerifier ;
@@ -25,8 +25,8 @@ public class AAdharData {
         this.issuerDID = issuerDID;
         this.issuerName = issuerName;
         this.credentialType = credentialType;
-        this.type = type;      //TODO credentialType":"IdentityCredential",
-        this.issuersVerifier = issuersVerifier;   //TODO responseFiledsForUser from the connectionDB
+        this.type = type;
+        this.issuersVerifier = issuersVerifier;   // responseFiledsForUser from the connectionDB
     }
 
     public String getCredentialType() {

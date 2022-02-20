@@ -3,7 +3,6 @@ package com.example.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -12,18 +11,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.example.digi_yatra_12.BaseClass;
+import com.example.digi_yatra_12.GlobalApplication;
 import com.example.digi_yatra_12.activities.PopAcknowledgementDialogActivity;
 import com.example.digi_yatra_12.activities.ReviewHealthCredentialsActivity;
 import com.example.digi_yatra_12.fragments.Camera_profile2;
+import com.example.digi_yatra_12.roomDatabase.AAdharData;
 import com.example.digi_yatra_12.roomDatabase.AadharDatabase;
+import com.example.digi_yatra_12.roomDatabase.BoardingPassData;
 import com.example.digi_yatra_12.roomDatabase.ConnectionDB;
-import com.google.gson.JsonObject;
+import com.example.model.ConnectionDetails;
+import com.google.gson.Gson;
 
 import org.hyperledger.aries.api.Handler;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class MyHandler implements Handler {
     // Push notification implementation
@@ -44,9 +50,58 @@ public class MyHandler implements Handler {
     public void handle(@NonNull String topic, byte[] message) {
         lastTopic = topic;
         lastMessage = new String(message, StandardCharsets.UTF_8);
-//Todo
+
         Log.d("received notification topic: ", lastTopic);
         Log.d("received notification message: ", lastMessage);
+        if (topic.equals("present-proof_actions")) {
+            JSONObject jsonObject = null;
+            try {
+                jsonObject = new JSONObject(lastMessage);
+                String type = jsonObject.getJSONObject("message").getJSONObject("Message").getString("@type");
+                if (type.equals("https://didcomm.org/present-proof/2.0/request-presentation")) {
+                    String piid = jsonObject.getJSONObject("message").getJSONObject("Properties").getString("piid");
+                    sendPresentation(piid);
+                }
+                /*{
+   "id":"30e2473e-eb3c-4cb9-b1f1-2de3192b36d8",
+   "topic":"present-proof_actions",
+   "message":{
+      "ProtocolName":"present-proof",
+      "Message":{
+         "@id":"7d0c5418-36d1-4c40-8ba7-c657adf8d26c",
+         "@type":"https://didcomm.org/present-proof/2.0/request-presentation",
+         "formats":[
+            {
+               "attach_id":"1234",
+               "format":"dif/presentation-exchange/definitions@v1.0"
+            }
+         ],
+         "request_presentations~attach":[
+            {
+               "data":{
+                  "json":{
+                     "issuer":"did:dataevolve:EiCgQLVtTs-0LuZ8lkMj3ZrJmx7u8H2MYqsLWPotMTbJBA",
+                     "type":"Identity Credential"
+                  }
+               }
+            }
+         ],
+         "~thread":{
+            "thid":"fec4dbe1-9b8a-4595-a1b1-7baf080bc8bb"
+         }
+      },
+      "Properties":{
+         "myDID":"did:peer:1zQmPhqwcEdtG7a1vjxsLGfxXEEC3QSyeXPtnFn4upy4ykGU",
+         "piid":"fec4dbe1-9b8a-4595-a1b1-7baf080bc8bb",
+         "theirDID":"did:peer:1zQmeTb9LoScmAuyGUf2RTGXDuhuxnu1kebMLSuBiKvmj2pn"
+      }
+   }
+}*/
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
         if (topic.equals("didexchange_states")) {
             JSONObject jsonObject = null;
             try {
@@ -138,7 +193,7 @@ public class MyHandler implements Handler {
                                                 "givenName":"Vemula Gourav",                        //key and value both are dynamic in screen 20
                                                 "id":"https://digiyatrafoundation.com/credentialid",  //exclude it
                                                 "idNumber":"xxxxxxxx4234", //aadhar number
-                                                "idType":"aadhar"                                    //TODO recieve vaccinationStatus and fullName for health credentials flow //show these values in screen 66. and after clicking accept button save data in database as we done before
+                                                "idType":"aadhar"                                    // recieve vaccinationStatus and fullName for health credentials flow //show these values in screen 66. and after clicking accept button save data in database as we done before
                                     },
                                     "expirationDate":"2100-01-01T19:23:24Z",
                                             "id":"https://digiyatrafoundation.com/credentialid",
@@ -191,38 +246,172 @@ public class MyHandler implements Handler {
         }
 
         @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
         protected Void doInBackground(Void... voids) {
             connectionDB = AadharDatabase.getInstance(context).Dao().getConnectionData(connectionId);
             return null;
-            //TOdo check type == verifier for
-            //TODO call api for verifier fetch mydid their
-            //TODO call propose credential
         }
 
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             if (connectionDB != null) {
-                /*SharedPreferences sharedPreferences = context.getSharedPreferences("digiyatra", context.MODE_PRIVATE);
-                SharedPreferences.Editor myEdit = sharedPreferences.edit();
-                myEdit.putString("connection_id", connectionId);
-                myEdit.apply();
-                myEdit.commit();*/
-                issuersVerifier = connectionDB.getJson().toString();
-                intent = new Intent(context, PopAcknowledgementDialogActivity.class);
-                intent.putExtra("connectionId", connectionId);
-                intent.putExtra("issuer_verifier", issuersVerifier);
-                context.startActivity(intent);
+                if (connectionDB.getType().equals("verifier")) {     // check type == verifier
+                    try {
+                        JSONObject getConnectionJsonObject = BaseClass.getConnection(connectionId, GlobalApplication.agent);
+                        if (getConnectionJsonObject.getString("status").equals("0")) {
+                            Toast.makeText(context, getConnectionJsonObject.getString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            ConnectionDetails connectionDetails = new Gson().fromJson(getConnectionJsonObject.toString().trim(), ConnectionDetails.class);
+                            String myConnectionId = connectionDetails.getConnRecord().getConnectionID();
+                            String myDID = connectionDetails.getConnRecord().getMyDID();
+                            String theirDid = connectionDetails.getConnRecord().getTheirDID();
+                            callProposeCredentials(myDID, theirDid);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else {
+                    issuersVerifier = connectionDB.getJson().toString();
+                    intent = new Intent(context, PopAcknowledgementDialogActivity.class);
+                    intent.putExtra("connectionId", connectionId);
+                    intent.putExtra("issuer_verifier", issuersVerifier);
+                    context.startActivity(intent);
+                }
             }
 
         }
     }
-       private class GetConnectionDataByMyDid extends AsyncTask<Void, Void, Void> {
+
+    private void callProposeCredentials( String myDid, String theirDid) throws JSONException {
+        String stringPresproposal= "{\n" +
+                "\"their_did\": \"\",\n" +
+                "\"my_did\": \"\",\n" +
+                "\"propose_presentation\": {\n" +
+                "\"formats\": [\n" +
+                "{\n" +
+                "\"attach_id\": \"1234\",\n" +
+                "\"format\": \"dif/presentation-exchange/definitions@v1.0\"\n" +
+                "}\n" +
+                "]\n" +
+                "}\n" +
+                "\n" +
+                "}\n";
+        JSONObject presproposal = null;
+        try {
+            presproposal = new JSONObject(stringPresproposal.trim());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        presproposal.put("their_did", theirDid);
+        presproposal.put("my_did", myDid);
+        JSONObject json = BaseClass.proposePresentation(myDid, theirDid, presproposal, GlobalApplication.agent);
+        if (json.getString("status").equals("0")) {
+            Toast.makeText(context, json.getString("message"), Toast.LENGTH_SHORT).show();
+        }
+        else if (json.getString("status").equals("1")) {
+            Toast.makeText(context, json.getString("message"), Toast.LENGTH_SHORT).show();
+            String piid = json.getString("piid");
+          //  sendPresentation(piid);
+           // res_object.put("piid",responseobject.get("piid"));
+        }
+    }
+
+    private void sendPresentation(String piid) {
+        new GetDataFromDatabase(piid).execute();
+    }
+
+    private class GetDataFromDatabase extends AsyncTask<Void, Void, Void> {
+        List<AAdharData> identityCredentialList, healthCredentialList;
+        String piid;
+        private List<BoardingPassData> boardingPassList;
+        public GetDataFromDatabase(String piid) {
+            this.piid = piid;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            identityCredentialList = AadharDatabase.getInstance(context).Dao().getAadharData("IdentityCredential");
+            healthCredentialList = AadharDatabase.getInstance(context).Dao().getAadharData("HealthCredential");
+            boardingPassList = AadharDatabase.getInstance(context).Dao().getBoardingPass();
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            if (identityCredentialList == null || identityCredentialList.isEmpty()) {
+                Toast.makeText(context, "Please add Identity Credentials",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (healthCredentialList == null || healthCredentialList.isEmpty()) {
+                Toast.makeText(context, "Please add Health Credentials",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (boardingPassList == null || boardingPassList.isEmpty()) {
+                Toast.makeText(context, "Please add boarding pass",Toast.LENGTH_SHORT).show();
+                return;
+            }
+            JSONObject jsonIdentity = identityCredentialList.get(0).getJson();
+            JSONObject jsonHealth = healthCredentialList.get(0).getJson();
+            try {
+                JSONObject jsonBoardingPass = new JSONObject(new Gson().toJson(boardingPassList.get(0).getBoardingPassModel()));
+                callSendPresentation(piid, jsonIdentity, jsonHealth, jsonBoardingPass);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void callSendPresentation(String piid, JSONObject jsonIdentity, JSONObject jsonHealth, JSONObject jsonBoardingPass) throws JSONException {
+        String presentationstring = "{\n" +
+                "    \"presentation\": {\n" +
+                "    \n" +
+                "      \"formats\": [\n" +
+                "        {\n" +
+                "          \"attach_id\": \" generate a random uuid\",\n" +
+                "          \"format\": \"dif/presentation-exchange/submission@v1.0\"\n" +
+                "        }\n" +
+                "      ],\n" +
+                "      \"presentations~attach\": [\n" +
+                "        {\n" +
+                "             \"data\": {\n" +
+                "            \n" +
+                "            \"json\": {}\n" +
+                "            }\n" +
+                "        },\n" +
+                "         {\n" +
+                "             \"data\": {\n" +
+                "            \n" +
+                "            \"json\": {}\n" +
+                "            }\n" +
+                "        },{\n" +
+                "             \"data\": {\n" +
+                "            \n" +
+                "            \"json\": {}\n" +
+                "            }\n" +
+                "        }\n" +
+                "  \n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }\n";
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonIdentity)));
+        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonHealth)));
+        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonBoardingPass)));
+        JSONObject presentationJson = new JSONObject(presentationstring.trim());
+        presentationJson.getJSONObject("presentation").remove("presentations~attach");
+        presentationJson.getJSONObject("presentation").put("presentations~attach",jsonArray);
+        JSONObject resSendPresentation = BaseClass.sendPresentation(piid, presentationJson, GlobalApplication.agent);
+            Toast.makeText(context, resSendPresentation.getString("message"), Toast.LENGTH_SHORT).show();
+    }
+
+
+    private class GetConnectionDataByMyDid extends AsyncTask<Void, Void, Void> {
         String myDid;
         ConnectionDB connectionDB;
         String issuersVerifier;

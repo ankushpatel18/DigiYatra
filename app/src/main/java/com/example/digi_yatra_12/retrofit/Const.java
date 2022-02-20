@@ -9,6 +9,7 @@ public final class Const {
     public static final String CLIENT_SECRETE = "fd4cbf13e6bb6661e177";
     public static final String BASE_URL_VALIDATE_SELFIE = "http://a246279c15ff2488bb6c0cc15f50c524-650662943.ap-south-1.elb.amazonaws.com:80/";
     public static final String BASE_URL_OTP = "https://cdn-api.co-vin.in/api/";
+    public static final String BASE_URL_ISSUER_LIST_BOARDING = "https://ssi.dataevolve.in/";
 
     Const() {}
 }

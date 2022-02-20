@@ -11,7 +11,7 @@ public class ConnectionDB {
     @PrimaryKey(autoGenerate = false)
     @NonNull
     private String connection_id = "";
-    private String type = "";  //Todo if the type is verifier I have to start verifier flow
+    private String type = "";
     private JSONObject json;
     private String myDID = "";
     private String theirDID= "";

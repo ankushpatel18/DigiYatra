@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -14,6 +15,7 @@ import com.example.digi_yatra_12.R;
 import com.example.digi_yatra_12.navbar.NavbarMainActivity;
 import com.example.digi_yatra_12.roomDatabase.AadharDatabase;
 import com.example.digi_yatra_12.roomDatabase.BoardingPassData;
+import com.example.model.BoardingPassModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +25,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
     Button Sucess;
     private String passangerName, issuerName, flightNo, from, to, date, pNR, sequence, seat;
     private String departureTime = "";
+    private BoardingPassModel boardingPassModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scan_bording_pass);
         Intent intent = getIntent();
         String text = intent.getStringExtra("values");
-
+        Log.d("boarding", text);
         String[] newStr = text.split("\\s+");
         String x = "";
         for (int i = 0; i < newStr.length; i++) {
@@ -82,18 +85,13 @@ public class ScanBordingPassActivity extends AppCompatActivity {
         pNR = newStr[1];
         txtPNR.setText(pNR);
 //SEQUNCE
-
-        txtSequence=findViewById(R.id.textView48);
         sequence = newStr[4].substring(8);
         txtSequence.setText(sequence);
 //SEAT
         txtSeat=findViewById(R.id.textView50);
         seat = newStr[4].substring(4,newStr.length -0);
         txtSeat.setText(seat);
-
-
-
-
+        boardingPassModel = new BoardingPassModel(text, date, flightNo, from, pNR, "", "", seat, sequence, to);
 
 
 
@@ -122,7 +120,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
     public class SaveBoardingPass extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            AadharDatabase.getInstance(ScanBordingPassActivity.this).Dao().saveBoardingPass(new BoardingPassData(0, passangerName, issuerName, flightNo, from, to, date, pNR, sequence, seat, departureTime));
+            AadharDatabase.getInstance(ScanBordingPassActivity.this).Dao().saveBoardingPass(new BoardingPassData(0, boardingPassModel));
             return null;
         }
 

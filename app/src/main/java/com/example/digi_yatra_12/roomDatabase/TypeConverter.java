@@ -2,6 +2,7 @@ package com.example.digi_yatra_12.roomDatabase;
 
 import android.util.Log;
 
+import com.example.model.BoardingPassModel;
 import com.example.model.IssuersVerifier;
 import com.google.gson.Gson;
 
@@ -31,5 +32,13 @@ public class TypeConverter {
     @androidx.room.TypeConverter
     public String fromIssuersVerifierToString(IssuersVerifier issuersVerifier) {
         return new Gson().toJson(issuersVerifier);
+    }
+    @androidx.room.TypeConverter
+    public String fromBoardingPassToString(BoardingPassModel boardingPassData) {
+        return new Gson().toJson(boardingPassData);
+    }
+    @androidx.room.TypeConverter
+    public BoardingPassModel fromBoardingPassToString(String boardingPassString) {
+        return new Gson().fromJson(boardingPassString, BoardingPassModel.class);
     }
 }

@@ -46,4 +46,6 @@ public interface RetrofitService {
     @Headers({"x-api-key: Zqh976skv453BkmlrWpFS25MBCPojStb5cbmQQo8"})
     @POST("v3/vaccination/confirmOTP")
     Call<JsonObject> verifyOtp(@Body JsonObject jsonObject);
-   }
+    @GET("verifier/get")
+    Call<JsonArray> getListIssuerBoarding_pass(@Query("airport_code") String airportCode);
+}
