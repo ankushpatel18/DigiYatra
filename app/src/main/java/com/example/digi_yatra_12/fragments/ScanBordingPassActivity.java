@@ -26,13 +26,14 @@ public class ScanBordingPassActivity extends AppCompatActivity {
     private String passangerName, issuerName, flightNo, from, to, date, pNR, sequence, seat;
     private String departureTime = "";
     private BoardingPassModel boardingPassModel;
+    private String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan_bording_pass);
         Intent intent = getIntent();
-        String text = intent.getStringExtra("values");
+        text = intent.getStringExtra("values");
         Log.d("boarding", text);
         String[] newStr = text.split("\\s+");
         String x = "";
@@ -59,7 +60,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
 
 //From
         txtFrom=findViewById(R.id.textView27);
-        from = newStr[2].substring(0,newStr.length -5);
+        from = "HYD"; /*newStr[2].substring(0,newStr.length -5);*/
         txtFrom.setText(from);
 //TO
         txtTo=findViewById(R.id.textView30);
@@ -85,6 +86,8 @@ public class ScanBordingPassActivity extends AppCompatActivity {
         pNR = newStr[1];
         txtPNR.setText(pNR);
 //SEQUNCE
+
+        txtSequence=findViewById(R.id.textView48);
         sequence = newStr[4].substring(8);
         txtSequence.setText(sequence);
 //SEAT
@@ -120,7 +123,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
     public class SaveBoardingPass extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            AadharDatabase.getInstance(ScanBordingPassActivity.this).Dao().saveBoardingPass(new BoardingPassData(0, boardingPassModel));
+            AadharDatabase.getInstance(ScanBordingPassActivity.this).Dao().saveBoardingPass(new BoardingPassData(text,false,"", boardingPassModel));
             return null;
         }
 

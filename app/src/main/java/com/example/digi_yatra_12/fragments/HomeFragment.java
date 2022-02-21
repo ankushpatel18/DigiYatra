@@ -267,7 +267,7 @@ FragmentHomeFragmentBinding binding;
         boardingPassIssuerAdapter = new BoardingPassIssuerAdapter(getContext(), issuersVerifierBoardingList, new BoardingPassIssuerAdapter.IssuerClick() {
             @Override
             public void onIssuerClick(IssuerBoardingPassModel issuerBoardingPassModel, View view) {
-                createInvitation(issuerBoardingPassModel.getEndpoint()+"/");
+                createInvitation(issuerBoardingPassModel.getEndpoint()+"/", boardingPassModel.getBarcodeString()        );
             }
         });
         RecyclerView recyclerView = dialogView.findViewById(R.id.recycler);
@@ -296,7 +296,7 @@ FragmentHomeFragmentBinding binding;
         boardingPassIssuerAdapter.notifyDataSetChanged();
     }
 
-    private  void createInvitation(String senderUrl) {
+    private  void createInvitation(String senderUrl, String boardingPassId) {
         BaseClass.createInvitation(senderUrl, new BaseClassInterface() {
             @Override
             public void createInvitationResponse(JsonObject invitation) {
@@ -315,7 +315,7 @@ FragmentHomeFragmentBinding binding;
                             String myConnectionId = connectionDetails.getConnRecord().getConnectionID();
                             String myDID = connectionDetails.getConnRecord().getMyDID();
                             String theirDid = connectionDetails.getConnRecord().getTheirDID();
-                            SaveConnection saveConnection = new SaveConnection(myConnectionId, myDID, theirDid);
+                            SaveConnection saveConnection = new SaveConnection(myConnectionId, myDID, theirDid, boardingPassId);
                             saveConnection.execute();
                         }
                     } catch (JSONException e) {
@@ -329,15 +329,18 @@ FragmentHomeFragmentBinding binding;
         String connectionId;
         String myDID;
         String theirDid;
-        public SaveConnection(String myConnectionId, String myDID, String theirDid) {
+        String boardinPassID;
+        public SaveConnection(String myConnectionId, String myDID, String theirDid, String boardinPassID) {
             connectionId = myConnectionId;
             this.myDID = myDID;
             this.theirDid = theirDid;
+            this.boardinPassID = boardinPassID;
         }
 
         @Override
         protected Void doInBackground(Void... Void) {
             AadharDatabase.getInstance(requireContext()).Dao().saveConnections(new ConnectionDB(connectionId,"verifier", new JSONObject(),myDID, theirDid));
+            AadharDatabase.getInstance(requireContext()).Dao().updateBoardingPass(false, theirDid, boardinPassID );
             return null;
         }
 

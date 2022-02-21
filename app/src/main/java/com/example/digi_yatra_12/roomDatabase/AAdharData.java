@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 @Entity(tableName = "aadhar_data")
 public class AAdharData {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     private int id =0;
     private JSONObject json;
     private String issuerDID = ""; // query using issuerDiD
