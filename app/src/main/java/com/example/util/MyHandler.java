@@ -297,7 +297,7 @@ public class MyHandler implements Handler {
                 "]\n" +
                 "}";
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("attach_id", new Random().nextInt(8999)+1000);
+        jsonObject.put("attach_id", String.valueOf(new Random().nextInt(8999)+1000));
         jsonObject.put("format", "dif/presentation-exchange/definitions@v1.0");
         JSONArray jsonArray = new JSONArray();
         jsonArray.put(jsonObject);
@@ -312,7 +312,7 @@ public class MyHandler implements Handler {
        // presproposal.put("their_did", theirDid);
        // presproposal.put("my_did", myDid);
         //presproposal = presproposal.getJSONObject("propose_presentation");
-        JSONObject json = BaseClass.proposePresentation(myDid, theirDid, new JSONObject(), GlobalApplication.agent); //ToDO for testing
+        JSONObject json = BaseClass.proposePresentation(myDid, theirDid, presproposal, GlobalApplication.agent);
         if (json.getString("status").equals("0")) {
             Toast.makeText(context, json.getString("message"), Toast.LENGTH_SHORT).show();
         }
@@ -342,7 +342,7 @@ public class MyHandler implements Handler {
         protected Void doInBackground(Void... voids) {
             identityCredentialList = AadharDatabase.getInstance(context).Dao().getAadharData("IdentityCredential");
             healthCredentialList = AadharDatabase.getInstance(context).Dao().getAadharData("HealthCredential");
-            boardingPassList = AadharDatabase.getInstance(context).Dao().getBoardingPass(theirDid);
+            boardingPassList = AadharDatabase.getInstance(context).Dao().getBoardingPass(GlobalApplication.boardingPassId);
 
             return null;
         }
@@ -350,7 +350,7 @@ public class MyHandler implements Handler {
         @Override
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
-            /*if (identityCredentialList == null || identityCredentialList.isEmpty()) {
+            if (identityCredentialList == null || identityCredentialList.isEmpty()) {
                 Toast.makeText(context, "Please add Identity Credentials",Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -361,11 +361,11 @@ public class MyHandler implements Handler {
             if (boardingPassList == null || boardingPassList.isEmpty()) {
                 Toast.makeText(context, "Please add boarding pass",Toast.LENGTH_SHORT).show();
                 return;
-            }*///TODO uncomment after testing
-            JSONObject jsonIdentity = new JSONObject()/*identityCredentialList.get(0).getJson()*/; //TODO
-            JSONObject jsonHealth = new JSONObject();/*healthCredentialList.get(0).getJson();*/    //TODO
+            }
+            JSONObject jsonIdentity = identityCredentialList.get(0).getJson();
+            JSONObject jsonHealth = healthCredentialList.get(0).getJson();
             try {
-                JSONObject jsonBoardingPass = new JSONObject(new Gson().toJson(boardingPassList.get(1).getBoardingPassModel()));
+                JSONObject jsonBoardingPass = new JSONObject(new Gson().toJson(boardingPassList.get(0).getBoardingPassModel()));
                 callSendPresentation(piid, jsonIdentity, jsonHealth, jsonBoardingPass);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -374,53 +374,33 @@ public class MyHandler implements Handler {
     }
 
     private void callSendPresentation(String piid, JSONObject jsonIdentity, JSONObject jsonHealth, JSONObject jsonBoardingPass) throws JSONException {
-        String presentationstring = "{\n" +
-                "    \"presentation\": {\n" +
-                "    \n" +
-                "      \"formats\": [\n" +
-                "        {\n" +
-                "          \"attach_id\": \" generate a random uuid\",\n" +//TODO
-                "          \"format\": \"dif/presentation-exchange/submission@v1.0\"\n" +
-                "        }\n" +
-                "      ],\n" +
-                "      \"presentations~attach\": [\n" +
-                "        {\n" +
-                "             \"data\": {\n" +
-                "            \n" +
-                "            \"json\": {}\n" +
-                "            }\n" +
-                "        },\n" +
-                "         {\n" +
-                "             \"data\": {\n" +
-                "            \n" +
-                "            \"json\": {}\n" +
-                "            }\n" +
-                "        },{\n" +
-                "             \"data\": {\n" +
-                "            \n" +
-                "            \"json\": {}\n" +
-                "            }\n" +
-                "        }\n" +
-                "  \n" +
-                "      ]\n" +
-                "    }\n" +
-                "  }\n";
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("attach_id", new Random().nextInt(9999));
-        jsonObject.put("format", "dif/presentation-exchange/submission@v1.0");
-        JSONArray jsonArrayFormat = new JSONArray();
-        jsonArrayFormat.put(jsonObject);
-        JSONArray jsonArray = new JSONArray();
-        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonIdentity)));
-        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonHealth)));
-        jsonArray.put(new JSONObject().put("data", new JSONObject().put("json", jsonBoardingPass)));
-        JSONObject presentationJson = new JSONObject(presentationstring.trim());
-        presentationJson.getJSONObject("presentation").remove("presentations~attach");
-        presentationJson.getJSONObject("presentation").put("presentations~attach",jsonArray);
-        presentationJson.getJSONObject("presentation").remove("formats");
-        presentationJson.getJSONObject("presentation").put("formats", jsonArray);
-        JSONObject resSendPresentation = BaseClass.sendPresentation(piid, presentationJson, GlobalApplication.agent);
+        JSONObject presentationJson = new JSONObject();
+        JSONObject presentationJsonObject = new JSONObject();
+        presentationJsonObject.put("comment", ""); //TODO what is the value of comment
+        JSONObject jsonFormat1 = new JSONObject();
+        jsonFormat1.put("attach_id", String.valueOf(new Random().nextInt(8999)+1000));
+        jsonFormat1.put("format", "dif/presentation-exchange/submission@v1.0");
+        JSONObject jsonFormat2 = new JSONObject();
+        jsonFormat2.put("attach_id", String.valueOf(new Random().nextInt(8999)+1000));
+        jsonFormat2.put("format", "dif/presentation-exchange/submission@v1.0");
+        JSONObject jsonFormat3 = new JSONObject();
+        jsonFormat3.put("attach_id", String.valueOf(new Random().nextInt(8999)+1000));
+        jsonFormat3.put("format", "dif/presentation-exchange/submission@v1.0");
+        JSONArray jsonFormatArray = new JSONArray();
+        jsonFormatArray.put(jsonFormat1);
+        jsonFormatArray.put(jsonFormat2);
+        jsonFormatArray.put(jsonFormat3);
+        presentationJsonObject.put("formats", jsonFormatArray);
+        JSONArray jsonArrayPresentationsAttach = new JSONArray();
+        jsonArrayPresentationsAttach.put(new JSONObject().put("data", new JSONObject().put("json", jsonIdentity))); //TODO
+        jsonArrayPresentationsAttach.put(new JSONObject().put("data", new JSONObject().put("json",jsonHealth)));//TODO
+        jsonArrayPresentationsAttach.put(new JSONObject().put("data", new JSONObject().put("json", jsonBoardingPass)));//TODO
+        presentationJsonObject.put("presentations~attach", jsonArrayPresentationsAttach);
+       // presentationJson.put("presentation", presentationJsonObject);
+        JSONObject resSendPresentation = BaseClass.sendPresentation(piid, presentationJsonObject, GlobalApplication.agent);
+        if (resSendPresentation.getString("status").equals("1")) {
+            new UpdateBoardingPass().execute();
+        }
             Toast.makeText(context, resSendPresentation.getString("message"), Toast.LENGTH_SHORT).show();
     }
 
@@ -473,6 +453,21 @@ public class MyHandler implements Handler {
                 Toast.makeText(context, "connection not found", Toast.LENGTH_SHORT).show();
             }
 
+        }
+
+    }
+    private class UpdateBoardingPass extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... Void) {
+          AadharDatabase.getInstance(context).Dao().updateBoardingPassStatus(true, GlobalApplication.boardingPassId );
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            super.onPostExecute(unused);
+            Log.d("UpdateBoardingPass", "success");
+            GlobalApplication.boardingPassId = null;
         }
     }
 

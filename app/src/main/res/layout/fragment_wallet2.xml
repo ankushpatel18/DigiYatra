@@ -29,25 +29,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.64" />
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:backgroundTint="#E6E6E6"
+        android:text="All"
+        android:textAllCaps="false"
+        android:textColor="#000000"
+        android:textSize="@dimen/_8ssp"
+        style="@style/CustomChipChoice"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_wallet" />
 
     <com.google.android.material.chip.Chip
         android:id="@+id/chip1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_15sdp"
-
-
         android:backgroundTint="#E6E6E6"
         android:text="Identity Credentials"
-
         android:textAllCaps="false"
         android:textColor="#000000"
-
         android:textSize="@dimen/_8ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/chip_all"
         app:layout_constraintTop_toBottomOf="@id/txt_wallet" />
 
     <com.google.android.material.chip.Chip
@@ -63,7 +76,6 @@
         android:textColor="#1C1C1C"
 
         android:textSize="@dimen/_8ssp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/chip1"
         app:layout_constraintTop_toBottomOf="@id/txt_wallet" />

@@ -46,6 +46,9 @@ public class NavbarMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_navbar_main);
         initHandlers();
         initViews();
+        if (getIntent().hasExtra("credentials") && getIntent().getStringExtra("credentials").equals("credentials")) {
+            bottomNavigationView.setSelectedItemId(R.id.wallet_fragment2);
+        }
         SharedPreferences sharedPreferences = getSharedPreferences("digiyatra", Context.MODE_PRIVATE);
         Boolean isFirstTime = sharedPreferences.getBoolean("is_first_time",true);
         if (isFirstTime) {
@@ -176,13 +179,14 @@ public class NavbarMainActivity extends AppCompatActivity {
     }
 
     private void initHandlers() {
-        GlobalApplication.handler = new MyHandler(this);
-        //TODO should this handlers uncomment?
-        //String registrationID1 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "presentproof_states");
-        //String registrationID2 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "presentproof _actions");
-        //String registrationID3 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "issue-credential_states");
-        String registrationID4 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "issue-credential_actions");
-        String registrationID5 =  GlobalApplication.agent.registerHandler(GlobalApplication.handler, "didexchange_states");
+        if (GlobalApplication.handler == null) {
+            GlobalApplication.handler = new MyHandler(this);
+            // String registrationID1 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "presentproof_states");
+            String registrationID2 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "present-proof_actions");
+            String registrationID3 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "issue-credential_states");
+            String registrationID4 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "issue-credential_actions");
+            String registrationID5 = GlobalApplication.agent.registerHandler(GlobalApplication.handler, "didexchange_states");
+        }
     }
 
     private void initViews() {
@@ -234,7 +238,10 @@ public class NavbarMainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 toolTipsManager.findAndDismiss(walletButton);
-                ToolTip.Builder builder=new ToolTip.Builder(NavbarMainActivity.this,walletButton,constraintLayout,"Click here to get started",ToolTip.POSITION_ABOVE);
+                ToolTip.Builder builder=new ToolTip.Builder(NavbarMainActivity.this,walletButton
+
+
+                        ,constraintLayout,"Click here \nto get started",ToolTip.POSITION_ABOVE);
                 builder.setAlign(ToolTip.ALIGN_CENTER);
                 builder.setBackgroundColor(Color.BLUE);
                 toolTipsManager.show(builder.build());

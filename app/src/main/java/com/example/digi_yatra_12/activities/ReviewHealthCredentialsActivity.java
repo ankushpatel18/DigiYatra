@@ -44,7 +44,9 @@ public class ReviewHealthCredentialsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AadharDatabase.getInstance(ReviewHealthCredentialsActivity.this).Dao().saveAadharData(new AAdharData(0, myJson, issuerId, issuerName, type, issuersVerifier, credentialType));
-                startActivity(new Intent(ReviewHealthCredentialsActivity.this, NavbarMainActivity.class));
+                Intent intent = new Intent(ReviewHealthCredentialsActivity.this, NavbarMainActivity.class);
+                intent.putExtra("credentials", "credentials");
+                startActivity(intent);
                 finish();
             }
         });
@@ -72,7 +74,20 @@ public class ReviewHealthCredentialsActivity extends AppCompatActivity {
                         TextView textValue = linearLayoutChild.findViewById(R.id.text_value);
                         String key1 = j.getString(key);
                         textKey.setText(key1);
-                        textValue.setText(value);
+                        switch (value) {
+                            case "0":
+                                textValue.setText("Not vaccinated");
+                                break;
+                            case "1":
+                                textValue.setText("Partially Vaccinated");
+                                break;
+                            case "2":
+                                textValue.setText("Fully Vaccinated");
+                                break;
+                            default:
+                                textValue.setText(value);
+                                break;
+                        }
                         binding.linear.addView(linearLayoutChild);
                     } catch (JSONException e) {
                         e.printStackTrace();

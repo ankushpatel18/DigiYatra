@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+ import android.os.Handler;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -222,6 +223,10 @@ FragmentHomeFragmentBinding binding;
                 BoardingPassAdapter boardingPassAdapter = new BoardingPassAdapter(getActivity(), boardingPassData, new BoardingPassAdapter.BoardingPass() {
                     @Override
                     public void onClick(View view, BoardingPassData boardingPassData) {
+                        if (boardingPassData.isStatus()) {
+                            Toast.makeText(getContext(), "Boarding pass already shared", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         customProgressDialog.show();
                         new RetrofitBuilder(Const.BASE_URL_ISSUER_LIST_BOARDING).create().getListIssuerBoarding_pass(boardingPassData.getBoardingPassModel().getFrom())
                                 .enqueue(new Callback<JsonArray>() {
@@ -259,6 +264,13 @@ FragmentHomeFragmentBinding binding;
         initViewsAndSetValues(dialogView, body, boardingPassModel);
         builder.setView(dialogView);
         AlertDialog alertDialog = builder.create();
+        Button button = dialogView.findViewById(R.id.btn_cancel);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+            }
+        });
         alertDialog.show();
     }
 
@@ -268,6 +280,13 @@ FragmentHomeFragmentBinding binding;
             @Override
             public void onIssuerClick(IssuerBoardingPassModel issuerBoardingPassModel, View view) {
                 createInvitation(issuerBoardingPassModel.getEndpoint()+"/", boardingPassModel.getBarcodeString()        );
+            }
+        });
+        Button button = dialogView.findViewById(R.id.btn_cancel);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
         RecyclerView recyclerView = dialogView.findViewById(R.id.recycler);
@@ -304,7 +323,7 @@ FragmentHomeFragmentBinding binding;
                 if (invitation != null) {
                     JSONObject connectionJsonObject = BaseClass.receiveInvitation(invitation, GlobalApplication.agent);
                     try {
-                        BaseClass.acceptInvitation(connectionId, "", GlobalApplication.agent);
+                       // BaseClass.acceptInvitation(connectionId, "", GlobalApplication.agent);
                         connectionId = connectionJsonObject.getString("connection_id");
                         JSONObject getConnectionJsonObject = BaseClass.getConnection(connectionId, GlobalApplication.agent);
                         if (getConnectionJsonObject.getString("status").equals("0")) {
@@ -339,8 +358,9 @@ FragmentHomeFragmentBinding binding;
 
         @Override
         protected Void doInBackground(Void... Void) {
+            GlobalApplication.boardingPassId = boardinPassID;
             AadharDatabase.getInstance(requireContext()).Dao().saveConnections(new ConnectionDB(connectionId,"verifier", new JSONObject(),myDID, theirDid));
-            AadharDatabase.getInstance(requireContext()).Dao().updateBoardingPass(false, theirDid, boardinPassID );
+            AadharDatabase.getInstance(requireContext()).Dao().updateBoardingPass( theirDid, boardinPassID );
             return null;
         }
 
@@ -348,6 +368,13 @@ FragmentHomeFragmentBinding binding;
         protected void onPostExecute(Void unused) {
             super.onPostExecute(unused);
             BaseClass.acceptInvitation(connectionId, "", GlobalApplication.agent);
+         //   GlobalApplication.customProgressDialog.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    GlobalApplication.customProgressDialog.dismiss();
+                }
+            }, 30000);
         }
     }
 

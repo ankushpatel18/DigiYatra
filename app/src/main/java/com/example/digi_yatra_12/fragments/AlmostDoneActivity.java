@@ -70,6 +70,8 @@ public class AlmostDoneActivity extends AppCompatActivity {
     private ImageView imgDot2, imgDot3;
     private Bitmap photoBitmap;
     private String connectionId;
+    private ImageView imgError;
+    private TextView textError;
 
 
     @Override
@@ -108,6 +110,8 @@ public class AlmostDoneActivity extends AppCompatActivity {
         stringCheck1 = findViewById(R.id.text_check1);
         stringCheck2 = findViewById(R.id.text_check2);
         stringCheck3 = findViewById(R.id.text_check3);
+        imgError = findViewById(R.id.img_error);
+        textError = findViewById(R.id.text_error);
         imgPhoto = findViewById(R.id.img_photo);
         imgDot2 = findViewById(R.id.imageDot2);
         imgDot3 = findViewById(R.id.imageDot3);
@@ -182,6 +186,8 @@ public class AlmostDoneActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        imgCheck1.setVisibility(View.VISIBLE);
+        stringCheck1.setVisibility(View.VISIBLE);
         JsonObject jsonObject2 = new JsonParser().parse(js.toString()).getAsJsonObject();
         Log.d("jhjhj", js.toString());
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -195,46 +201,67 @@ public class AlmostDoneActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ValidateFaceB64Response> call, Response<ValidateFaceB64Response> response) {
                 customProgressDialog.dismiss();
+                showValidation();
                 if (response.isSuccessful()) {
                     if (response.body().getError() != null && !response.body().getError().isEmpty()) {
                         Toast.makeText(AlmostDoneActivity.this, response.body().getError(), Toast.LENGTH_SHORT).show();
+                        onError();
                     }
                     else if (response.body().getLiveness_result() != null && !response.body().getLiveness_result().isEmpty()) {
                         if (response.body().getLiveness_result().equals("1")) {
-                            showValidation();
                             imgCheck1.setVisibility(View.VISIBLE);
                             stringCheck1.setVisibility(View.VISIBLE);
+                            imgCheck2.setVisibility(View.VISIBLE);
+                            stringCheck2.setVisibility(View.VISIBLE);
                             imgPhoto.setImageBitmap(photoBitmap);
                             showChecks(encImage);
                         }
+                        else if (response.body().getLiveness_result().equals("2")) {
+                            onError();
+                            Toast.makeText(AlmostDoneActivity.this, "No Face Detected", Toast.LENGTH_SHORT).show();
+                        }
                         else {
-                            Toast.makeText(AlmostDoneActivity.this, "validation failed", Toast.LENGTH_SHORT).show();
+                            onError();
                         }
                     }
                     else {
-                        Toast.makeText(AlmostDoneActivity.this, "validation failed", Toast.LENGTH_SHORT).show();
+                        onError();
                     }
                 }
                 else {
-                    Toast.makeText(AlmostDoneActivity.this, "validation failed", Toast.LENGTH_SHORT).show();
+                    onError();
                 }
             }
 
             @Override
             public void onFailure(Call<ValidateFaceB64Response> call, Throwable t) {
+                onError();
                 customProgressDialog.dismiss();
-                Toast.makeText(AlmostDoneActivity.this, "validation failed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void showChecks(String encImage) {
+    private void onError() {
+        Toast.makeText(AlmostDoneActivity.this, "validation failed", Toast.LENGTH_SHORT).show();
+        imgError.setVisibility(View.VISIBLE);
+        textError.setVisibility(View.VISIBLE);
+        imgCheck1.setVisibility(View.INVISIBLE);
+        stringCheck1.setVisibility(View.INVISIBLE);
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                imgCheck2.setVisibility(View.VISIBLE);
-                stringCheck2.setVisibility(View.VISIBLE);
+                imgError.setVisibility(View.INVISIBLE);
+                textError.setVisibility(View.INVISIBLE);
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+            }
+        }, 3000);
+    }
+
+    private void showChecks(String encImage) {
+        Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -252,8 +279,6 @@ public class AlmostDoneActivity extends AppCompatActivity {
                         },1000);
                     }
                 },1000);
-            }
-        },1000);
     }
 
     private void requestCredential(String selfie) throws JSONException {

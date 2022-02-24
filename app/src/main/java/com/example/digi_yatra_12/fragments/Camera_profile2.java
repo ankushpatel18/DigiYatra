@@ -119,7 +119,9 @@ public class Camera_profile2 extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AadharDatabase.getInstance(Camera_profile2.this).Dao().saveAadharData(new AAdharData(0,myJson, issuerId,issuerName,type,issuersVerifier, credentialType));
-                startActivity(new Intent(Camera_profile2.this, NavbarMainActivity.class));
+                Intent intent = new Intent(Camera_profile2.this, NavbarMainActivity.class);
+                intent.putExtra("credentials", "credentials");
+                startActivity(intent);
                 finish();
             }
         });

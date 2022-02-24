@@ -362,6 +362,35 @@
             app:layout_constraintEnd_toEndOf="@id/first_check"
             app:layout_constraintStart_toStartOf="@id/first_check"
             app:layout_constraintTop_toBottomOf="@id/first_check" />
+        <ImageView
+            android:id="@+id/img_error"
+            android:layout_width="@dimen/_32sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="#FF0000"
+            android:src="@drawable/ic_error"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@id/second_check"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txt_scanning"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/text_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="no face found"
+            android:textAlignment="center"
+            android:textColor="#FF0000"
+            android:textSize="@dimen/_8ssp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/img_error"
+            app:layout_constraintStart_toStartOf="@id/img_error"
+            app:layout_constraintTop_toBottomOf="@id/img_error" />
 
         <ImageView
             android:id="@+id/second_check"

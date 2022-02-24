@@ -42,11 +42,11 @@ public class TypeConverter {
         return new Gson().fromJson(boardingPassString, BoardingPassModel.class);
     }
     @androidx.room.TypeConverter
-    public Boolean stringToBoolean (String status) {
-        return Boolean.getBoolean(status);
+    public boolean stringToBoolean (String status) {
+        return Boolean.parseBoolean(status);
     }
     @androidx.room.TypeConverter
-    public String BooleanTostring (Boolean status) {
+    public String BooleanTostring (boolean status) {
         return String.valueOf(status);
     }
 }

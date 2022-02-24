@@ -56,6 +56,16 @@ public class BoardingPassAdapter extends PagerAdapter {
         issuerName.setText(boardingPassDataList.get(position).getBoardingPassModel().getPassengerName());
         TextView date = itemView.findViewById(R.id.flight_date);
         date.setText(boardingPassDataList.get(position).getBoardingPassModel().getDoT());
+        TextView textShared = itemView.findViewById(R.id.txt_shared);
+        TextView textNotShared = itemView.findViewById(R.id.txt_not_shared);
+        if (boardingPassDataList.get(position).isStatus()){
+            textNotShared.setVisibility(View.GONE);
+            textShared.setVisibility(View.VISIBLE);
+        }
+        else {
+            textNotShared.setVisibility(View.VISIBLE);
+            textShared.setVisibility(View.GONE);
+        }
         Objects.requireNonNull(container).addView(itemView);
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,5 +1,6 @@
 package com.example.digi_yatra_12.roomDatabase;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
@@ -10,13 +11,14 @@ import org.json.JSONObject;
 
 @Entity(tableName = "aadhar_data")
 public class AAdharData {
-    @PrimaryKey(autoGenerate = false)
     private int id =0;
     private JSONObject json;
     private String issuerDID = ""; // query using issuerDiD
     private String issuerName = "";
     private String type = "";
     private IssuersVerifier issuersVerifier ;
+    @NonNull
+    @PrimaryKey(autoGenerate = false)
     private String credentialType;
 
     public  AAdharData(int id, JSONObject json, String issuerDID, String issuerName, String type, IssuersVerifier issuersVerifier, String credentialType) {

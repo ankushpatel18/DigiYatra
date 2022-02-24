@@ -1,6 +1,7 @@
 package com.example.digi_yatra_12.fragments;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
     private CardAdapter cardAdapter;
     Button add;
     Chip identityChip, healthChip;
+    private Chip allChip;
 
     public WalletFragment2() {
     }
@@ -39,7 +41,7 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet2, container, false);
         initViews(view);
-        getData("IdentityCredential");
+        getData("all");
 
 
         add = (Button) view.findViewById(R.id.addBtn);
@@ -64,21 +66,34 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
         recyclerview = view.findViewById(R.id.recycler);
         identityChip = view.findViewById(R.id.chip1);
         healthChip = view.findViewById(R.id.chip4);
+        allChip = view.findViewById(R.id.chip_all);
         identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
         identityChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getData("IdentityCredential");
-                identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.select));
-                healthChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
+                identityChip.setChecked(true);
+                identityChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.select)));
+                healthChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
+                allChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
             }
         });
         healthChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getData("HealthCredential");
-                identityChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.unselect));
-                healthChip.setChipStrokeColor(ContextCompat.getColorStateList(getContext(), R.color.select));
+                identityChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
+                healthChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.select)));
+                allChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
+            }
+        });
+        allChip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                identityChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
+                healthChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.unselect)));
+                allChip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.select)));
+                getData("all");
             }
         });
     }
@@ -102,8 +117,12 @@ public class WalletFragment2 extends Fragment implements CardAdapter.CardClick {
 
         @Override
         protected List<AAdharData> doInBackground(String... strings) {
-
-            aAdharDataList = AadharDatabase.getInstance(getContext()).Dao().getAadharData(credentialType);
+            if (credentialType.equals("all")) {
+                aAdharDataList = AadharDatabase.getInstance(getContext()).Dao().getAadharData();
+            }
+            else {
+                aAdharDataList = AadharDatabase.getInstance(getContext()).Dao().getAadharData(credentialType);
+            }
             return aAdharDataList;
         }
 

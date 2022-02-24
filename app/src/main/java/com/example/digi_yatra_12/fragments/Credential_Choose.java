@@ -129,12 +129,13 @@ public class Credential_Choose extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<AAdharData> aAdharDataList) {
             super.onPostExecute(aAdharDataList);
-            if (aAdharDataList != null && !aAdharDataList.isEmpty()) {
+          /*  if (aAdharDataList != null && !aAdharDataList.isEmpty()) {
                 Toast.makeText(getApplicationContext(), credentialType+" is already exists", Toast.LENGTH_SHORT).show();
             }
-            else {
+            else {*/
+            //TODO
                 httpCall(credentialType);
-            }
+            //}
         }
     }
 

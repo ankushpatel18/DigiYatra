@@ -12,6 +12,6 @@
     <color name="in_progress">#002E56</color>
     <color name="in_pending">#979797</color>
     <color name="complete">#01893E</color>
-    <color name="select">#EBF3FC</color>
+    <color name="select">#000000</color>
     <color name="unselect">#C4C4C4</color>
 </resources>

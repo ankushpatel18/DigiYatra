@@ -706,8 +706,8 @@ public class BaseClass {
 
         try {
             PresentProofController  present = agent.getPresentProofController();
-            res = present.sendProposePresentation(requestEnvelope);
-
+          //  res = present.sendProposePresentation(requestEnvelope); //change by gourav
+            res = present.acceptRequestPresentation(requestEnvelope);
             if (res.getError() != null && !res.getError().getMessage().isEmpty()) {
 //                        Log.d("failed to add content: ", res.getError().getMessage());
                 res_object.put("status",0);

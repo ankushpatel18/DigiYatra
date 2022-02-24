@@ -72,8 +72,7 @@ public class ScanBordingPassActivity extends AppCompatActivity {
 // Date
 
         txtDate=findViewById(R.id.textView43);
-
-        String dayOfYear = newStr[4].substring(0,newStr.length -5);
+        String dayOfYear = newStr[4].substring(0,2);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_YEAR, Integer.parseInt(dayOfYear));
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");

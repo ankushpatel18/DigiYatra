@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/_15sdp"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <TextView
     android:id="@+id/text_title"
@@ -194,10 +195,10 @@
         app:layout_constraintTop_toBottomOf="@id/select_verifier"
         />
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_submit"
+        android:id="@+id/btn_cancel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="OK"
+        android:text="Cancel"
         android:backgroundTint="#002E56"
         android:textColor="@color/white"
         android:textAllCaps="true"

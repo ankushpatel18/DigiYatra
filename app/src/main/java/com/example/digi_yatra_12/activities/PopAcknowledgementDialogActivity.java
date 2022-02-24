@@ -59,6 +59,7 @@ public class PopAcknowledgementDialogActivity extends AppCompatActivity {
         for (int i = 0; i < requestField.size(); i++) {
             TextView textView = new TextView(PopAcknowledgementDialogActivity.this);
             textView.setText(i + 1 + "." + requestField.get(i));
+            textView.setTextColor(getColor(R.color.black));
             LinearLayout.LayoutParams buttonLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             buttonLayoutParams.setMargins(0, 10, 0, 0);
             textView.setLayoutParams(buttonLayoutParams);

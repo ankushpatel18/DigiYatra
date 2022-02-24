@@ -55,7 +55,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardHolder>{
         }
         try {
             if (aAdharDataList.get(position).getJson().getJSONObject("credentialSubject").has("idNumber")) {
-                holder.txtAadhaarValue.setText(aAdharDataList.get(position).getJson().getJSONObject("credentialSubject").getString("idNumber"));
+                String stringIdNumber = aAdharDataList.get(position).getJson().getJSONObject("credentialSubject").getString("idNumber");
+                switch (stringIdNumber) {
+                    case "0":
+                        holder.txtAadhaarValue.setText("Not vaccinated");
+                        break;
+                    case "1":
+                        holder.txtAadhaarValue.setText("Partially Vaccinated");
+                        break;
+                    case "2":
+                        holder.txtAadhaarValue.setText("Fully Vaccinated");
+                        break;
+                    default:
+                        holder.txtAadhaarValue.setText(stringIdNumber);
+                        break;
+                }
                 holder.txtAadhaarKey.setText(aAdharDataList.get(position).getIssuersVerifier().getResponseFiledsForUser().getIdNumber());
             }
         } catch (JSONException e) {

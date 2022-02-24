@@ -47,4 +47,8 @@
     <style name="Theme.Digi_Yatra_12.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Digi_Yatra_12.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/background_color_chip_state_list</item>
+        <item name="android:textColor">@color/text_color_chip_state_list</item>
+    </style>
 </resources>

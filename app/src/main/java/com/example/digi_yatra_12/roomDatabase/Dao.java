@@ -26,10 +26,12 @@ public interface Dao {
     ConnectionDB getConnectionDataByMyDid(String myDid);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void saveBoardingPass(BoardingPassData boardingPassData);
-    @Query("UPDATE boarding_pass SET status = :status, theirDid= :theirDid WHERE barcodeString =:barcodeString")
-    void updateBoardingPass(Boolean status, String theirDid, String barcodeString);
+    @Query("UPDATE boarding_pass SET theirDid= :theirDid WHERE barcodeString =:barcodeString")
+    void updateBoardingPass(String theirDid, String barcodeString);
+    @Query("UPDATE boarding_pass SET status = :status WHERE barcodeString =:barcodeString")
+    void updateBoardingPassStatus(boolean status, String barcodeString);
     @Query("SELECT * FROM boarding_pass")
     List<BoardingPassData> getBoardingPass();
-    @Query("SELECT * FROM boarding_pass WHERE theirDid = :connectionID LIMIT 1")
-    List<BoardingPassData> getBoardingPass(String connectionID);
+    @Query("SELECT * FROM boarding_pass WHERE barcodeString = :boardingPassString LIMIT 1")
+    List<BoardingPassData> getBoardingPass(String boardingPassString);
 }

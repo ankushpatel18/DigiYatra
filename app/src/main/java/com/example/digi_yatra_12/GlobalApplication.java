@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.util.CustomProgressDialog;
 import com.example.util.DatabaseManager;
 import com.example.util.MyHandler;
 import com.example.util.StoreProvider;
@@ -16,10 +17,13 @@ import org.hyperledger.aries.config.Options;
 
 public class GlobalApplication extends Application {
     public static AriesController agent;
-    public static Handler handler;
+    public static Handler handler = null;
+    public static String boardingPassId = null;
+    public static CustomProgressDialog customProgressDialog = null;
     @Override
     public void onCreate() {
         super.onCreate();
+        customProgressDialog = new CustomProgressDialog(this);
         DatabaseManager databaseManager = new DatabaseManager();
         databaseManager.initCouchbaseLite(getApplicationContext());
         Provider store = new StoreProvider(databaseManager,getApplicationContext());
