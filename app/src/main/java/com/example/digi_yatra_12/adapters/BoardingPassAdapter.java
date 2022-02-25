@@ -78,7 +78,7 @@ public class BoardingPassAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((LinearLayout) object);
+        container.removeView((CardView) object);
     }
     public  interface BoardingPass {
         void onClick(View view, BoardingPassData boardingPassData);
